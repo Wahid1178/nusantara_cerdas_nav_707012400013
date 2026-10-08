@@ -174,7 +174,7 @@ class RiwayatLaporanPage extends StatelessWidget {
               width: 50,
               height: 50,
               decoration: BoxDecoration(
-                color: warna.withValues(alpha: 0.1),
+                color: warna.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
@@ -224,7 +224,7 @@ class RiwayatLaporanPage extends StatelessWidget {
                       vertical: 5,
                     ),
                     decoration: BoxDecoration(
-                      color: warna.withValues(alpha: 0.1),
+                      color: warna.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(

@@ -1,12 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class DetailLayananPage extends StatelessWidget {
+import '../models/pengajuan_model.dart';
+
+class DetailLayananPage extends StatefulWidget {
   final Map<String, String> layanan;
 
   const DetailLayananPage({
     super.key,
     required this.layanan,
   });
+
+  @override
+  State<DetailLayananPage> createState() => _DetailLayananPageState();
+}
+
+class _DetailLayananPageState extends State<DetailLayananPage> {
+  bool _sedangMengajukan = false;
+
+  Future<void> _ajukanPermohonan() async {
+    final namaLayanan = widget.layanan['nama'] ?? 'Layanan';
+
+    // setState digunakan untuk mengubah status sementara tombol
+    setState(() {
+      _sedangMengajukan = true;
+    });
+
+    // Simulasi proses pengajuan
+    await Future.delayed(const Duration(seconds: 1));
+
+    if (!mounted) return;
+
+    // Simpan pengajuan ke PengajuanModel
+    context.read<PengajuanModel>().tambahPengajuan(namaLayanan);
+
+    // Kembalikan status pengajuan ke halaman sebelumnya
+    Navigator.pop(
+      context,
+      'Permohonan $namaLayanan telah diajukan',
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +80,7 @@ class DetailLayananPage extends StatelessWidget {
 
             // Nama layanan
             Text(
-              layanan['nama'] ?? 'Nama Layanan',
+              widget.layanan['nama'] ?? 'Nama Layanan',
               style: const TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
@@ -60,7 +93,7 @@ class DetailLayananPage extends StatelessWidget {
             _infoLayanan(
               icon: Icons.account_balance,
               judul: 'Instansi Penanggung Jawab',
-              isi: layanan['dinas'] ?? '-',
+              isi: widget.layanan['dinas'] ?? '-',
             ),
 
             const SizedBox(height: 18),
@@ -69,7 +102,7 @@ class DetailLayananPage extends StatelessWidget {
             _infoLayanan(
               icon: Icons.access_time,
               judul: 'Jam Pelayanan',
-              isi: layanan['jam'] ?? '-',
+              isi: widget.layanan['jam'] ?? '-',
             ),
 
             const SizedBox(height: 18),
@@ -78,7 +111,7 @@ class DetailLayananPage extends StatelessWidget {
             _infoLayanan(
               icon: Icons.info_outline,
               judul: 'Deskripsi',
-              isi: layanan['keterangan'] ?? '-',
+              isi: widget.layanan['keterangan'] ?? '-',
             ),
 
             const SizedBox(height: 35),
@@ -88,18 +121,24 @@ class DetailLayananPage extends StatelessWidget {
               width: double.infinity,
               height: 52,
               child: ElevatedButton.icon(
-                onPressed: () {
-                  final namaLayanan = layanan['nama'] ?? 'Layanan';
-
-                  Navigator.pop(
-                    context,
-                    'Permohonan $namaLayanan telah diajukan',
-                  );
-                },
-                icon: const Icon(Icons.send),
-                label: const Text(
-                  'Ajukan Permohonan',
-                  style: TextStyle(
+                onPressed: _sedangMengajukan
+                    ? null
+                    : _ajukanPermohonan,
+                icon: _sedangMengajukan
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Icon(Icons.send),
+                label: Text(
+                  _sedangMengajukan
+                      ? 'Mengajukan...'
+                      : 'Ajukan Permohonan',
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -107,6 +146,8 @@ class DetailLayananPage extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
+                  disabledBackgroundColor: Colors.blue.shade300,
+                  disabledForegroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../models/favorit_model.dart';
 import '../navigation/app_routes.dart';
 
 class LayananPage extends StatelessWidget {
@@ -167,6 +169,11 @@ class LayananPage extends StatelessWidget {
       itemCount: layanan.length,
       itemBuilder: (context, index) {
         final item = layanan[index];
+        final namaLayanan = item['nama']!;
+
+        // Memantau perubahan status favorit
+        final favoritModel = context.watch<FavoritModel>();
+        final isFavorit = favoritModel.isFavorit(namaLayanan);
 
         return Card(
           margin: const EdgeInsets.only(bottom: 14),
@@ -176,6 +183,7 @@ class LayananPage extends StatelessWidget {
           ),
           child: ListTile(
             contentPadding: const EdgeInsets.all(16),
+
             leading: Container(
               width: 50,
               height: 50,
@@ -188,23 +196,54 @@ class LayananPage extends StatelessWidget {
                 color: Colors.blue,
               ),
             ),
+
             title: Text(
-              item['nama']!,
+              namaLayanan,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
             ),
+
             subtitle: Padding(
               padding: const EdgeInsets.only(top: 6),
               child: Text(
                 item['dinas']!,
               ),
             ),
-            trailing: const Icon(
-              Icons.arrow_forward_ios,
-              size: 18,
+
+            // Tombol favorit dan detail
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  tooltip: isFavorit
+                      ? 'Hapus dari favorit'
+                      : 'Tambah ke favorit',
+                  icon: Icon(
+                    isFavorit ? Icons.star : Icons.star_border,
+                    color: isFavorit ? Colors.amber : Colors.grey,
+                  ),
+                  onPressed: () {
+                    if (isFavorit) {
+                      context
+                          .read<FavoritModel>()
+                          .batalTandai(namaLayanan);
+                    } else {
+                      context
+                          .read<FavoritModel>()
+                          .tandai(namaLayanan);
+                    }
+                  },
+                ),
+
+                const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 18,
+                ),
+              ],
             ),
+
             onTap: () async {
               final hasil = await Navigator.pushNamed(
                 context,
