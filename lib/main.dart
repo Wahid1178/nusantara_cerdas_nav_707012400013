@@ -9,12 +9,8 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => FavoritModel(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => PengajuanModel(),
-        ),
+        ChangeNotifierProvider(create: (_) => FavoritModel()),
+        ChangeNotifierProvider(create: (_) => PengajuanModel()),
       ],
       child: const NusantaraCerdasApp(),
     ),
@@ -40,9 +36,7 @@ class NusantaraCerdasApp extends StatelessWidget {
       onUnknownRoute: AppRoutes.routeTidakDikenal,
 
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
     );

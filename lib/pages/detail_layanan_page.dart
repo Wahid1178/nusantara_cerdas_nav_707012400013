@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,25 +17,64 @@ class DetailLayananPage extends StatefulWidget {
 }
 
 class _DetailLayananPageState extends State<DetailLayananPage> {
+  final TextEditingController _namaController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+
+  bool _setuju = false;
   bool _sedangMengajukan = false;
+  String _sesiDipilih = 'Pagi';
+
+  bool get _formValid {
+    final namaTerisi = _namaController.text.trim().isNotEmpty;
+    final email = _emailController.text.trim();
+    final emailValid = email.contains('@') &&
+        email.indexOf('@') > 0 &&
+        email.indexOf('@') < email.length - 1;
+
+    return namaTerisi && emailValid && _setuju;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _namaController.addListener(_perbaruiForm);
+    _emailController.addListener(_perbaruiForm);
+  }
+
+  void _perbaruiForm() {
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _namaController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
 
   Future<void> _ajukanPermohonan() async {
+    if (!_formValid || _sedangMengajukan) return;
+
     final namaLayanan = widget.layanan['nama'] ?? 'Layanan';
 
-    // setState digunakan untuk mengubah status sementara tombol
     setState(() {
       _sedangMengajukan = true;
     });
 
-    // Simulasi proses pengajuan
-    await Future.delayed(const Duration(seconds: 1));
+    // Simulasi proses pengiriman permohonan.
+    await Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
 
-    // Simpan pengajuan ke PengajuanModel
-    context.read<PengajuanModel>().tambahPengajuan(namaLayanan);
+    // Simpan data lengkap ke model.
+    context.read<PengajuanModel>().tambahPengajuanLengkap(
+          namaLayanan: namaLayanan,
+          namaPemohon: _namaController.text.trim(),
+          email: _emailController.text.trim(),
+          sesi: _sesiDipilih,
+        );
 
-    // Kembalikan status pengajuan ke halaman sebelumnya
     Navigator.pop(
       context,
       'Permohonan $namaLayanan telah diajukan',
@@ -43,13 +83,16 @@ class _DetailLayananPageState extends State<DetailLayananPage> {
 
   @override
   Widget build(BuildContext context) {
+    final email = _emailController.text.trim();
+    final emailValid = email.contains('@') &&
+        email.indexOf('@') > 0 &&
+        email.indexOf('@') < email.length - 1;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Detail Layanan',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
@@ -59,7 +102,6 @@ class _DetailLayananPageState extends State<DetailLayananPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Icon layanan
             Center(
               child: Container(
                 width: 90,
@@ -75,10 +117,8 @@ class _DetailLayananPageState extends State<DetailLayananPage> {
                 ),
               ),
             ),
-
             const SizedBox(height: 25),
 
-            // Nama layanan
             Text(
               widget.layanan['nama'] ?? 'Nama Layanan',
               style: const TextStyle(
@@ -86,44 +126,161 @@ class _DetailLayananPageState extends State<DetailLayananPage> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-
             const SizedBox(height: 25),
 
-            // Dinas
             _infoLayanan(
               icon: Icons.account_balance,
               judul: 'Instansi Penanggung Jawab',
               isi: widget.layanan['dinas'] ?? '-',
             ),
-
             const SizedBox(height: 18),
 
-            // Jam pelayanan
             _infoLayanan(
               icon: Icons.access_time,
               judul: 'Jam Pelayanan',
               isi: widget.layanan['jam'] ?? '-',
             ),
-
             const SizedBox(height: 18),
 
-            // Deskripsi
             _infoLayanan(
               icon: Icons.info_outline,
               judul: 'Deskripsi',
               isi: widget.layanan['keterangan'] ?? '-',
             ),
+            const SizedBox(height: 30),
 
-            const SizedBox(height: 35),
+            const Text(
+              'Form Pengajuan Layanan',
+              style: TextStyle(
+                fontSize: 21,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Lengkapi data berikut untuk mengajukan permohonan.',
+              style: TextStyle(color: Colors.grey),
+            ),
+            const SizedBox(height: 20),
 
-            // Tombol pengajuan
+            // Input nama pemohon.
+            TextField(
+              controller: _namaController,
+              textCapitalization: TextCapitalization.words,
+              decoration: const InputDecoration(
+                labelText: 'Nama Lengkap',
+                hintText: 'Masukkan nama lengkap',
+                prefixIcon: Icon(Icons.person_outline),
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 18),
+
+            // Input dan validasi email.
+            TextField(
+              controller: _emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                labelText: 'Email',
+                hintText: 'contoh@email.com',
+                prefixIcon: const Icon(Icons.email_outlined),
+                border: const OutlineInputBorder(),
+                errorText: email.isEmpty || emailValid
+                    ? null
+                    : 'Masukkan email yang mengandung @ dengan benar',
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            const Text(
+              'Pilih Sesi Pelayanan',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+
+            // Pilihan sesi menggunakan state lokal.
+            RadioListTile<String>(
+              title: const Text('Pagi'),
+              subtitle: const Text('08.00–10.00'),
+              value: 'Pagi',
+              groupValue: _sesiDipilih,
+              activeColor: Colors.blue,
+              contentPadding: EdgeInsets.zero,
+              onChanged: _sedangMengajukan
+                  ? null
+                  : (value) {
+                      if (value == null) return;
+                      setState(() {
+                        _sesiDipilih = value;
+                      });
+                    },
+            ),
+            RadioListTile<String>(
+              title: const Text('Siang'),
+              subtitle: const Text('10.00–13.00'),
+              value: 'Siang',
+              groupValue: _sesiDipilih,
+              activeColor: Colors.blue,
+              contentPadding: EdgeInsets.zero,
+              onChanged: _sedangMengajukan
+                  ? null
+                  : (value) {
+                      if (value == null) return;
+                      setState(() {
+                        _sesiDipilih = value;
+                      });
+                    },
+            ),
+            RadioListTile<String>(
+              title: const Text('Sore'),
+              subtitle: const Text('13.00–16.00'),
+              value: 'Sore',
+              groupValue: _sesiDipilih,
+              activeColor: Colors.blue,
+              contentPadding: EdgeInsets.zero,
+              onChanged: _sedangMengajukan
+                  ? null
+                  : (value) {
+                      if (value == null) return;
+                      setState(() {
+                        _sesiDipilih = value;
+                      });
+                    },
+            ),
+
+            const SizedBox(height: 12),
+
+            // Persetujuan pemohon.
+            CheckboxListTile(
+              value: _setuju,
+              contentPadding: EdgeInsets.zero,
+              controlAffinity: ListTileControlAffinity.leading,
+              activeColor: Colors.blue,
+              title: const Text(
+                'Saya menyetujui data yang diberikan digunakan untuk '
+                'keperluan pengajuan layanan.',
+              ),
+              onChanged: _sedangMengajukan
+                  ? null
+                  : (value) {
+                      setState(() {
+                        _setuju = value ?? false;
+                      });
+                    },
+            ),
+
+            const SizedBox(height: 24),
+
+            // Tombol aktif jika nama, email, dan persetujuan valid.
             SizedBox(
               width: double.infinity,
               height: 52,
               child: ElevatedButton.icon(
-                onPressed: _sedangMengajukan
-                    ? null
-                    : _ajukanPermohonan,
+                onPressed: _formValid && !_sedangMengajukan
+                    ? _ajukanPermohonan
+                    : null,
                 icon: _sedangMengajukan
                     ? const SizedBox(
                         width: 20,
@@ -146,8 +303,8 @@ class _DetailLayananPageState extends State<DetailLayananPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
-                  disabledBackgroundColor: Colors.blue.shade300,
-                  disabledForegroundColor: Colors.white,
+                  disabledBackgroundColor: Colors.blue.shade100,
+                  disabledForegroundColor: Colors.grey.shade600,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -175,11 +332,7 @@ class _DetailLayananPageState extends State<DetailLayananPage> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            icon,
-            color: Colors.blue,
-            size: 25,
-          ),
+          Icon(icon, color: Colors.blue, size: 25),
           const SizedBox(width: 14),
           Expanded(
             child: Column(

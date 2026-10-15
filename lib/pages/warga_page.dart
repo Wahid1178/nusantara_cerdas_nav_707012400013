@@ -16,20 +16,14 @@ class WargaPage extends StatelessWidget {
         children: [
           const Text(
             'Warga',
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           ),
 
           const SizedBox(height: 6),
 
           const Text(
             'Kelola aktivitas dan layanan Anda sebagai warga.',
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: 14,
-            ),
+            style: TextStyle(color: Colors.grey, fontSize: 14),
           ),
 
           const SizedBox(height: 25),
@@ -49,11 +43,7 @@ class WargaPage extends StatelessWidget {
                 CircleAvatar(
                   radius: 32,
                   backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.person,
-                    size: 35,
-                    color: Colors.blue,
-                  ),
+                  child: Icon(Icons.person, size: 35, color: Colors.blue),
                 ),
 
                 SizedBox(width: 16),
@@ -63,7 +53,7 @@ class WargaPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Muhamad Nizar Rahman',
+                        'M Hidayat Nur Wahid',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 19,
@@ -73,9 +63,7 @@ class WargaPage extends StatelessWidget {
                       SizedBox(height: 5),
                       Text(
                         'Pengguna Aplikasi',
-                        style: TextStyle(
-                          color: Colors.white70,
-                        ),
+                        style: TextStyle(color: Colors.white70),
                       ),
                     ],
                   ),
@@ -88,10 +76,7 @@ class WargaPage extends StatelessWidget {
 
           const Text(
             'Aktivitas Warga',
-            style: TextStyle(
-              fontSize: 21,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
           ),
 
           const SizedBox(height: 15),
@@ -113,16 +98,11 @@ class WargaPage extends StatelessWidget {
                   color: Colors.blue.shade50,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(
-                  Icons.history,
-                  color: Colors.blue,
-                ),
+                child: const Icon(Icons.history, color: Colors.blue),
               ),
               title: const Text(
                 'Riwayat Laporan',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
               subtitle: const Padding(
                 padding: EdgeInsets.only(top: 5),
@@ -130,15 +110,9 @@ class WargaPage extends StatelessWidget {
                   'Lihat laporan dan pengaduan yang pernah Anda kirim.',
                 ),
               ),
-              trailing: const Icon(
-                Icons.arrow_forward_ios,
-                size: 18,
-              ),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 18),
               onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  AppRoutes.riwayatLaporan,
-                );
+                Navigator.pushNamed(context, AppRoutes.riwayatLaporan);
               },
             ),
           ),
@@ -169,9 +143,7 @@ class WargaPage extends StatelessWidget {
               ),
               title: const Text(
                 'Pengaduan Warga',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
               subtitle: const Padding(
                 padding: EdgeInsets.only(top: 5),
@@ -179,10 +151,7 @@ class WargaPage extends StatelessWidget {
                   'Sampaikan permasalahan yang terjadi di lingkungan kota.',
                 ),
               ),
-              trailing: const Icon(
-                Icons.arrow_forward_ios,
-                size: 18,
-              ),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 18),
               onTap: () {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -214,27 +183,17 @@ class WargaPage extends StatelessWidget {
                   color: Colors.green.shade50,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(
-                  Icons.info_outline,
-                  color: Colors.green,
-                ),
+                child: const Icon(Icons.info_outline, color: Colors.green),
               ),
               title: const Text(
                 'Informasi Warga',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
               subtitle: const Padding(
                 padding: EdgeInsets.only(top: 5),
-                child: Text(
-                  'Informasi dan layanan yang tersedia untuk warga.',
-                ),
+                child: Text('Informasi dan layanan yang tersedia untuk warga.'),
               ),
-              trailing: const Icon(
-                Icons.arrow_forward_ios,
-                size: 18,
-              ),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 18),
               onTap: () {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -254,18 +213,14 @@ class WargaPage extends StatelessWidget {
           // =========================
           const Text(
             'Layanan Favorit',
-            style: TextStyle(
-              fontSize: 21,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
           ),
 
           const SizedBox(height: 15),
 
           Consumer<FavoritModel>(
             builder: (context, favoritModel, child) {
-              final daftarFavorit =
-                  favoritModel.layananFavorit.toList();
+              final daftarFavorit = favoritModel.layananFavorit.toList();
 
               if (daftarFavorit.isEmpty) {
                 return Card(
@@ -277,18 +232,12 @@ class WargaPage extends StatelessWidget {
                     padding: EdgeInsets.all(20),
                     child: Row(
                       children: [
-                        Icon(
-                          Icons.star_border,
-                          color: Colors.grey,
-                          size: 30,
-                        ),
+                        Icon(Icons.star_border, color: Colors.grey, size: 30),
                         SizedBox(width: 14),
                         Expanded(
                           child: Text(
                             'Belum ada layanan yang ditandai sebagai favorit.',
-                            style: TextStyle(
-                              color: Colors.grey,
-                            ),
+                            style: TextStyle(color: Colors.grey),
                           ),
                         ),
                       ],
@@ -298,52 +247,42 @@ class WargaPage extends StatelessWidget {
               }
 
               return Column(
-                children: daftarFavorit.map(
-                  (namaLayanan) {
-                    return Card(
-                      elevation: 2,
-                      margin: const EdgeInsets.only(bottom: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                children: daftarFavorit.map((namaLayanan) {
+                  return Card(
+                    elevation: 2,
+                    margin: const EdgeInsets.only(bottom: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.all(16),
+
+                      leading: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.amber.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(Icons.star, color: Colors.amber),
                       ),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.all(16),
 
-                        leading: Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            color: Colors.amber.shade50,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Icon(
-                            Icons.star,
-                            color: Colors.amber,
-                          ),
-                        ),
+                      title: Text(
+                        namaLayanan,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
 
-                        title: Text(
-                          namaLayanan,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-
-                        subtitle: const Padding(
-                          padding: EdgeInsets.only(top: 5),
-                          child: Text(
-                            'Layanan yang Anda tandai sebagai favorit.',
-                          ),
-                        ),
-
-                        trailing: const Icon(
-                          Icons.favorite,
-                          color: Colors.red,
+                      subtitle: const Padding(
+                        padding: EdgeInsets.only(top: 5),
+                        child: Text(
+                          'Layanan yang Anda tandai sebagai favorit.',
                         ),
                       ),
-                    );
-                  },
-                ).toList(),
+
+                      trailing: const Icon(Icons.favorite, color: Colors.red),
+                    ),
+                  );
+                }).toList(),
               );
             },
           ),

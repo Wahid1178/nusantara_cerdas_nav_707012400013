@@ -9,9 +9,7 @@ class RouteTidakDikenalPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'Halaman Tidak Ditemukan',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
@@ -41,10 +39,7 @@ class RouteTidakDikenalPage extends StatelessWidget {
               const Text(
                 'Route Tidak Ditemukan',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
 
               const SizedBox(height: 10),
@@ -53,11 +48,7 @@ class RouteTidakDikenalPage extends StatelessWidget {
                 'Halaman yang Anda cari tidak tersedia '
                 'atau route yang dimasukkan tidak terdaftar.',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 15,
-                  height: 1.5,
-                ),
+                style: TextStyle(color: Colors.grey, fontSize: 15, height: 1.5),
               ),
 
               const SizedBox(height: 30),
@@ -76,9 +67,7 @@ class RouteTidakDikenalPage extends StatelessWidget {
                   icon: const Icon(Icons.home),
                   label: const Text(
                     'Kembali ke Beranda',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,

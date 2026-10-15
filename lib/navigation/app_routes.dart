@@ -8,6 +8,9 @@ import '../pages/pengaturan_kota_page.dart';
 import '../pages/tentang_aplikasi_page.dart';
 import '../pages/route_tidak_dikenal_page.dart';
 import 'kerangka_navigasi.dart';
+import '../pages/tanya_petugas_page.dart';
+import '../pages/lokasi_kantor_page.dart';
+import '../pages/statistik_layanan_page.dart';
 
 class AppRoutes {
   // Nama-nama route
@@ -18,6 +21,9 @@ class AppRoutes {
   static const String riwayatLaporan = '/riwayat-laporan';
   static const String pengaturanKota = '/pengaturan-kota';
   static const String tentangAplikasi = '/tentang-aplikasi';
+  static const String tanyaPetugas = '/tanya-petugas';
+  static const String lokasiKantor = '/lokasi-kantor';
+  static const String statistikLayanan = '/statistik-layanan';
 
   // Daftar route
   static Map<String, WidgetBuilder> daftarRoute() {
@@ -28,6 +34,9 @@ class AppRoutes {
       riwayatLaporan: (context) => const RiwayatLaporanPage(),
       pengaturanKota: (context) => const PengaturanKotaPage(),
       tentangAplikasi: (context) => const TentangAplikasiPage(),
+      tanyaPetugas: (context) => const TanyaPetugasPage(),
+      lokasiKantor: (context) => const LokasiKantorPage(),
+      statistikLayanan: (context) => const StatistikLayananPage(),
     };
   }
 

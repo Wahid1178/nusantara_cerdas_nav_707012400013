@@ -61,32 +61,28 @@ class _KerangkaNavigasiState extends State<KerangkaNavigasi> {
         onDestinationSelected: (index) {
           // Tutup drawer terlebih dahulu
           Navigator.pop(context);
-
+          
           if (index == 0) {
-            // Beranda
             _ubahHalaman(0);
           } else if (index == 1) {
-            // Layanan
             _ubahHalaman(1);
           } else if (index == 2) {
-            // Warga
             _ubahHalaman(2);
           } else if (index == 3) {
-            // Pengaturan Kota
-            Navigator.pushNamed(
-              context,
-              AppRoutes.pengaturanKota,
-            );
+            Navigator.pushNamed(context, AppRoutes.tanyaPetugas);
           } else if (index == 4) {
-            // Tentang Aplikasi
-            Navigator.pushNamed(
-              context,
-              AppRoutes.tentangAplikasi,
-            );
+            Navigator.pushNamed(context, AppRoutes.lokasiKantor);
           } else if (index == 5) {
-            // Keluar
+            Navigator.pushNamed(context, AppRoutes.statistikLayanan);
+          } else if (index == 6) {
+            Navigator.pushNamed(context, AppRoutes.pengaturanKota);
+          } else if (index == 7) {
+            Navigator.pushNamed(context, AppRoutes.tentangAplikasi);
+          } else if (index == 8) {
             _tampilkanDialogKeluar(context);
           }
+
+
         },
         children: [
           const Padding(
@@ -116,6 +112,24 @@ class _KerangkaNavigasiState extends State<KerangkaNavigasi> {
             icon: _ikonWarga(Icons.person_outline, totalPengajuan),
             selectedIcon: _ikonWarga(Icons.person, totalPengajuan),
             label: const Text('Warga'),
+          ),
+       
+          const NavigationDrawerDestination(
+            icon: Icon(Icons.chat_bubble_outline),
+            selectedIcon: Icon(Icons.chat_bubble),
+            label: Text('Tanya Petugas'),
+          ),
+
+          const NavigationDrawerDestination(
+            icon: Icon(Icons.location_on_outlined),
+            selectedIcon: Icon(Icons.location_on),
+            label: Text('Lokasi Kantor'),
+          ),
+
+          NavigationDrawerDestination(
+            icon: const Icon(Icons.bar_chart_outlined),
+            selectedIcon: const Icon(Icons.bar_chart),
+            label: const Text('Statistik Layanan'),
           ),
 
           const Padding(
