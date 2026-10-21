@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../models/pengajuan_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../cubit/pengajuan_cubit.dart';
 import '../pages/beranda_page.dart';
 import '../pages/layanan_page.dart';
 import '../pages/warga_page.dart';
 import 'app_routes.dart';
+import '../models/pengajuan_model.dart';
 
 class KerangkaNavigasi extends StatefulWidget {
   const KerangkaNavigasi({super.key});
@@ -32,16 +32,12 @@ class _KerangkaNavigasiState extends State<KerangkaNavigasi> {
   @override
   Widget build(BuildContext context) {
     final double lebarLayar = MediaQuery.of(context).size.width;
-
     // Breakpoint tugas: 600 logical pixels
     final bool layarLebar = lebarLayar >= 600;
 
-    // Hanya mengambil jumlah pengajuan.
-    // Bagian navigasi lainnya tidak perlu bergantung pada seluruh model.
-    final int totalPengajuan = context.select<PengajuanModel, int>(
-      (model) => model.totalPengajuan,
-    );
-
+return BlocSelector<PengajuanCubit, dynamic, int>(
+  selector: (daftarPengajuan) => daftarPengajuan.length,
+  builder: (context, totalPengajuan) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -53,7 +49,7 @@ class _KerangkaNavigasiState extends State<KerangkaNavigasi> {
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
       ),
-
+    
       // =========================
       // NAVIGATION DRAWER
       // =========================
@@ -219,8 +215,10 @@ class _KerangkaNavigasiState extends State<KerangkaNavigasi> {
                   label: 'Warga',
                 ),
               ],
-            ),
-    );
+          ),
+      );
+    },
+  );
   }
 
   // =========================

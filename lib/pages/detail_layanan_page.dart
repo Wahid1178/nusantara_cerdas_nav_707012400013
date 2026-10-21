@@ -1,8 +1,6 @@
-
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../models/pengajuan_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../cubit/pengajuan_cubit.dart';
 
 class DetailLayananPage extends StatefulWidget {
   final Map<String, String> layanan;
@@ -53,33 +51,29 @@ class _DetailLayananPageState extends State<DetailLayananPage> {
     super.dispose();
   }
 
-  Future<void> _ajukanPermohonan() async {
-    if (!_formValid || _sedangMengajukan) return;
 
-    final namaLayanan = widget.layanan['nama'] ?? 'Layanan';
+Future<void> _ajukanPermohonan() async {
+  if (!_formValid || _sedangMengajukan) return;
 
-    setState(() {
-      _sedangMengajukan = true;
-    });
+  final namaLayanan = widget.layanan['nama'] ?? 'Layanan';
 
-    // Simulasi proses pengiriman permohonan.
-    await Future.delayed(const Duration(seconds: 2));
+  setState(() {
+    _sedangMengajukan = true;
+  });
 
-    if (!mounted) return;
+  // Simulasi proses pengiriman permohonan.
+  await Future.delayed(const Duration(seconds: 2));
 
-    // Simpan data lengkap ke model.
-    context.read<PengajuanModel>().tambahPengajuanLengkap(
-          namaLayanan: namaLayanan,
-          namaPemohon: _namaController.text.trim(),
-          email: _emailController.text.trim(),
-          sesi: _sesiDipilih,
-        );
+  if (!mounted) return;
 
-    Navigator.pop(
-      context,
-      'Permohonan $namaLayanan telah diajukan',
-    );
-  }
+  // Simpan nama layanan melalui PengajuanCubit.
+  context.read<PengajuanCubit>().tambahPengajuan(namaLayanan);
+
+  Navigator.pop(
+    context,
+    'Permohonan $namaLayanan telah diajukan',
+  );
+}
 
   @override
   Widget build(BuildContext context) {

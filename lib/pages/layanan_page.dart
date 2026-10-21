@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../models/favorit_model.dart';
+import '../cubit/favorit_cubit.dart';
 import '../navigation/app_routes.dart';
 
 class LayananPage extends StatelessWidget {
@@ -13,7 +13,6 @@ class LayananPage extends StatelessWidget {
       length: 3,
       child: Column(
         children: [
-          // Header
           const Padding(
             padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
             child: Align(
@@ -23,51 +22,34 @@ class LayananPage extends StatelessWidget {
                 children: [
                   Text(
                     'Layanan Publik',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 6),
                   Text(
                     'Pilih layanan publik sesuai kebutuhan Anda.',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                    ),
+                    style: TextStyle(color: Colors.grey, fontSize: 14),
                   ),
                 ],
               ),
             ),
           ),
-
           const SizedBox(height: 10),
-
-          // Tab Bar
           const TabBar(
             tabs: [
-              Tab(
-                icon: Icon(Icons.description_outlined),
-                text: 'Perizinan',
-              ),
-              Tab(
-                icon: Icon(Icons.local_hospital_outlined),
-                text: 'Kesehatan',
-              ),
+              Tab(icon: Icon(Icons.description_outlined), text: 'Perizinan'),
+              Tab(icon: Icon(Icons.local_hospital_outlined), text: 'Kesehatan'),
               Tab(
                 icon: Icon(Icons.directions_bus_outlined),
                 text: 'Transportasi',
               ),
             ],
           ),
-
-          // Isi Tab
           Expanded(
             child: TabBarView(
               children: [
-                _daftarPerizinan(context),
-                _daftarKesehatan(context),
-                _daftarTransportasi(context),
+                _daftarPerizinan(),
+                _daftarKesehatan(),
+                _daftarTransportasi(),
               ],
             ),
           ),
@@ -76,8 +58,8 @@ class LayananPage extends StatelessWidget {
     );
   }
 
-  Widget _daftarPerizinan(BuildContext context) {
-    final List<Map<String, String>> layanan = [
+  Widget _daftarPerizinan() {
+    final layanan = <Map<String, String>>[
       {
         'nama': 'Izin Usaha',
         'dinas': 'Dinas Penanaman Modal dan Pelayanan Terpadu',
@@ -96,22 +78,20 @@ class LayananPage extends StatelessWidget {
         'nama': 'Izin Keramaian',
         'dinas': 'Dinas Perizinan Kota',
         'jam': '08.00 - 14.00',
-        'keterangan':
-            'Layanan pengajuan izin untuk kegiatan masyarakat yang melibatkan banyak peserta.',
+        'keterangan': 'Layanan pengajuan izin untuk kegiatan masyarakat yang melibatkan banyak peserta.',
       },
     ];
 
-    return _buatDaftarLayanan(context, layanan);
+    return _buatDaftarLayanan(layanan);
   }
 
-  Widget _daftarKesehatan(BuildContext context) {
-    final List<Map<String, String>> layanan = [
+  Widget _daftarKesehatan() {
+    final layanan = <Map<String, String>>[
       {
         'nama': 'Pendaftaran Puskesmas',
         'dinas': 'Dinas Kesehatan Kota',
         'jam': '07.30 - 14.00',
-        'keterangan':
-            'Layanan pendaftaran kunjungan masyarakat ke puskesmas.',
+        'keterangan': 'Layanan pendaftaran kunjungan masyarakat ke puskesmas.',
       },
       {
         'nama': 'Layanan Ambulans',
@@ -129,11 +109,11 @@ class LayananPage extends StatelessWidget {
       },
     ];
 
-    return _buatDaftarLayanan(context, layanan);
+    return _buatDaftarLayanan(layanan);
   }
 
-  Widget _daftarTransportasi(BuildContext context) {
-    final List<Map<String, String>> layanan = [
+  Widget _daftarTransportasi() {
+    final layanan = <Map<String, String>>[
       {
         'nama': 'Kartu Transportasi',
         'dinas': 'Dinas Perhubungan Kota',
@@ -152,28 +132,20 @@ class LayananPage extends StatelessWidget {
         'nama': 'Informasi Rute',
         'dinas': 'Dinas Perhubungan Kota',
         'jam': '24 Jam',
-        'keterangan':
-            'Informasi mengenai rute dan jadwal transportasi umum.',
+        'keterangan': 'Informasi mengenai rute dan jadwal transportasi umum.',
       },
     ];
 
-    return _buatDaftarLayanan(context, layanan);
+    return _buatDaftarLayanan(layanan);
   }
 
-  Widget _buatDaftarLayanan(
-    BuildContext context,
-    List<Map<String, String>> layanan,
-  ) {
+  Widget _buatDaftarLayanan(List<Map<String, String>> layanan) {
     return ListView.builder(
       padding: const EdgeInsets.all(20),
       itemCount: layanan.length,
       itemBuilder: (context, index) {
         final item = layanan[index];
         final namaLayanan = item['nama']!;
-
-        // Memantau perubahan status favorit
-        final favoritModel = context.watch<FavoritModel>();
-        final isFavorit = favoritModel.isFavorit(namaLayanan);
 
         return Card(
           margin: const EdgeInsets.only(bottom: 14),
@@ -183,7 +155,6 @@ class LayananPage extends StatelessWidget {
           ),
           child: ListTile(
             contentPadding: const EdgeInsets.all(16),
-
             leading: Container(
               width: 50,
               height: 50,
@@ -196,54 +167,38 @@ class LayananPage extends StatelessWidget {
                 color: Colors.blue,
               ),
             ),
-
             title: Text(
               namaLayanan,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
-
             subtitle: Padding(
               padding: const EdgeInsets.only(top: 6),
-              child: Text(
-                item['dinas']!,
-              ),
+              child: Text(item['dinas']!),
             ),
-
-            // Tombol favorit dan detail
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                IconButton(
-                  tooltip: isFavorit
-                      ? 'Hapus dari favorit'
-                      : 'Tambah ke favorit',
-                  icon: Icon(
-                    isFavorit ? Icons.star : Icons.star_border,
-                    color: isFavorit ? Colors.amber : Colors.grey,
-                  ),
-                  onPressed: () {
-                    if (isFavorit) {
-                      context
-                          .read<FavoritModel>()
-                          .batalTandai(namaLayanan);
-                    } else {
-                      context
-                          .read<FavoritModel>()
-                          .tandai(namaLayanan);
-                    }
+                BlocBuilder<FavoritCubit, Set<String>>(
+                  builder: (context, daftarFavorit) {
+                    final isFavorit = daftarFavorit.contains(namaLayanan);
+
+                    return IconButton(
+                      tooltip: isFavorit
+                          ? 'Hapus dari favorit'
+                          : 'Tambah ke favorit',
+                      icon: Icon(
+                        isFavorit ? Icons.star : Icons.star_border,
+                        color: isFavorit ? Colors.amber : Colors.grey,
+                      ),
+                      onPressed: () {
+                        context.read<FavoritCubit>().toggleFavorit(namaLayanan);
+                      },
+                    );
                   },
                 ),
-
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  size: 18,
-                ),
+                const Icon(Icons.arrow_forward_ios, size: 18),
               ],
             ),
-
             onTap: () async {
               final hasil = await Navigator.pushNamed(
                 context,
