@@ -67,7 +67,12 @@ Future<void> _ajukanPermohonan() async {
   if (!mounted) return;
 
   // Simpan nama layanan melalui PengajuanCubit.
-  context.read<PengajuanCubit>().tambahPengajuan(namaLayanan);
+  context.read<PengajuanCubit>().tambahPengajuan(
+        namaLayanan,
+        namaPemohon: _namaController.text.trim(),
+        email: _emailController.text.trim(),
+        sesi: _sesiDipilih,
+      );
 
   Navigator.pop(
     context,
@@ -88,8 +93,6 @@ Future<void> _ajukanPermohonan() async {
           'Detail Layanan',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -101,7 +104,7 @@ Future<void> _ajukanPermohonan() async {
                 width: 90,
                 height: 90,
                 decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
+                  color: Colors.blue.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Icon(
@@ -320,7 +323,7 @@ Future<void> _ajukanPermohonan() async {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Row(

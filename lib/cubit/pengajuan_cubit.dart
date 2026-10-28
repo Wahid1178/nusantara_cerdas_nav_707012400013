@@ -1,38 +1,58 @@
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class PengajuanCubit extends Cubit<List<String>> {
-  PengajuanCubit() : super(<String>[]);
+import '../models/pengajuan_model.dart';
 
-  // Jumlah layanan di keranjang pengajuan.
+class PengajuanCubit extends Cubit<List<Pengajuan>> {
+  PengajuanCubit() : super(<Pengajuan>[]);
+
+  // Turunan dari state: jumlah layanan yang sedang diajukan.
   int get totalPengajuan => state.length;
 
-  // Menambahkan layanan ke keranjang.
-  // Layanan yang sama tidak ditambahkan dua kali.
-  void tambahPengajuan(String namaLayanan) {
-    if (state.contains(namaLayanan)) return;
+  // Daftar nama layanan yang diajukan.
+  List<String> get daftarNamaLayanan =>
+      state.map((pengajuan) => pengajuan.namaLayanan).toList();
 
-    emit([...state, namaLayanan]);
+  void tambahPengajuan(
+    String namaLayanan, {
+    String namaPemohon = '-',
+    String email = '-',
+    String sesi = '-',
+  }) {
+    emit(<Pengajuan>[
+      ...state,
+      Pengajuan(
+        namaLayanan: namaLayanan,
+        namaPemohon: namaPemohon,
+        email: email,
+        sesi: sesi,
+      ),
+    ]);
   }
 
-  // Menghapus layanan tertentu dari keranjang.
-  void hapusPengajuan(String namaLayanan) {
-    emit(
-      state.where((nama) => nama != namaLayanan).toList(),
+  void tandaiSelesai(int index) {
+    if (index < 0 || index >= state.length) return;
+
+    final lama = state[index];
+    final salinan = List<Pengajuan>.of(state);
+
+    // Buat objek baru (bukan mengubah objek lama) supaya state
+    // dianggap berubah dan BlocBuilder ikut dibangun ulang.
+    salinan[index] = Pengajuan(
+      namaLayanan: lama.namaLayanan,
+      namaPemohon: lama.namaPemohon,
+      email: lama.email,
+      sesi: lama.sesi,
+      status: 'Selesai',
     );
+
+    emit(salinan);
   }
 
-  // Mengirim seluruh layanan dalam keranjang.
-  // Untuk saat ini, pengiriman disimulasikan dengan
-  // mengosongkan keranjang setelah proses selesai.
-  void kirimSemuaPengajuan() {
-    if (state.isEmpty) return;
-
-    emit(<String>[]);
+  void hapusPengajuan(String namaLayanan) {
+    emit(state.where((p) => p.namaLayanan != namaLayanan).toList());
   }
 
-  // Mengosongkan keranjang.
   void kosongkanPengajuan() {
-    emit(<String>[]);
+    emit(<Pengajuan>[]);
   }
 }

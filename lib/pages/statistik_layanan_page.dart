@@ -1,7 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../cubit/pengajuan_cubit.dart';
 import '../models/pengajuan_model.dart';
 
 class StatistikLayananPage extends StatelessWidget {
@@ -9,8 +10,15 @@ class StatistikLayananPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.watch<PengajuanModel>();
-    final pengajuan = model.daftarPengajuanDetail;
+    return BlocBuilder<PengajuanCubit, List<Pengajuan>>(
+      builder: (context, pengajuan) {
+        return _bangunHalaman(context, pengajuan);
+      },
+    );
+  }
+
+  Widget _bangunHalaman(BuildContext context, List<Pengajuan> pengajuan) {
+    final warnaTeks = Theme.of(context).colorScheme.onSurfaceVariant;
 
     final jumlahMenunggu = pengajuan
         .where((item) => item.status == 'Menunggu')
@@ -27,8 +35,6 @@ class StatistikLayananPage extends StatelessWidget {
           'Statistik Layanan',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -74,9 +80,9 @@ class StatistikLayananPage extends StatelessWidget {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'Grafik menunjukkan jumlah pengajuan berdasarkan statusnya.',
-              style: TextStyle(color: Colors.black54),
+              style: TextStyle(color: warnaTeks),
             ),
             const SizedBox(height: 24),
             SizedBox(
@@ -102,10 +108,24 @@ class StatistikLayananPage extends StatelessWidget {
                     rightTitles: const AxisTitles(
                       sideTitles: SideTitles(showTitles: false),
                     ),
-                    leftTitles: const AxisTitles(
+                    leftTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
                         reservedSize: 36,
+                        getTitlesWidget: (value, meta) {
+                          if (value % 1 != 0) return const SizedBox.shrink();
+
+                          return SideTitleWidget(
+                            axisSide: meta.axisSide,
+                            child: Text(
+                              value.toInt().toString(),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
                     bottomTitles: AxisTitles(
@@ -127,7 +147,10 @@ class StatistikLayananPage extends StatelessWidget {
                             axisSide: meta.axisSide,
                             child: Text(
                               judul,
-                              style: const TextStyle(fontSize: 12),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
                             ),
                           );
                         },
@@ -139,10 +162,10 @@ class StatistikLayananPage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             if (total == 0)
-              const Center(
+              Center(
                 child: Text(
                   'Belum ada pengajuan untuk ditampilkan.',
-                  style: TextStyle(color: Colors.black54),
+                  style: TextStyle(color: warnaTeks),
                 ),
               ),
           ],

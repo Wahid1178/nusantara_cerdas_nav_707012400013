@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../models/favorit_model.dart';
+import '../cubit/favorit_cubit.dart';
+import '../cubit/theme_cubit.dart';
 import '../navigation/app_routes.dart';
 
 class WargaPage extends StatelessWidget {
@@ -95,7 +96,7 @@ class WargaPage extends StatelessWidget {
                 width: 50,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
+                  color: Colors.blue.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(Icons.history, color: Colors.blue),
@@ -133,7 +134,7 @@ class WargaPage extends StatelessWidget {
                 width: 50,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: Colors.orange.shade50,
+                  color: Colors.orange.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(
@@ -180,7 +181,7 @@ class WargaPage extends StatelessWidget {
                 width: 50,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: Colors.green.shade50,
+                  color: Colors.green.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(Icons.info_outline, color: Colors.green),
@@ -206,6 +207,55 @@ class WargaPage extends StatelessWidget {
             ),
           ),
 
+          const SizedBox(height: 14),
+
+          // =========================
+          // Mode Gelap (ThemeCubit)
+          // =========================
+          Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: BlocBuilder<ThemeCubit, ThemeMode>(
+              builder: (context, themeMode) {
+                final bool gelap = themeMode == ThemeMode.dark;
+
+                return SwitchListTile(
+                  contentPadding: const EdgeInsets.all(16),
+                  secondary: Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.indigo.withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      gelap ? Icons.dark_mode : Icons.light_mode,
+                      color: Colors.indigo,
+                    ),
+                  ),
+                  title: const Text(
+                    'Mode Gelap',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Text(
+                      gelap
+                          ? 'Tampilan gelap sedang aktif.'
+                          : 'Aktifkan untuk tampilan gelap.',
+                    ),
+                  ),
+                  value: gelap,
+                  onChanged: (nilai) {
+                    context.read<ThemeCubit>().ubahMode(nilai);
+                  },
+                );
+              },
+            ),
+          ),
+
           const SizedBox(height: 30),
 
           // =========================
@@ -218,9 +268,9 @@ class WargaPage extends StatelessWidget {
 
           const SizedBox(height: 15),
 
-          Consumer<FavoritModel>(
-            builder: (context, favoritModel, child) {
-              final daftarFavorit = favoritModel.layananFavorit.toList();
+          BlocBuilder<FavoritCubit, Set<String>>(
+            builder: (context, favorit) {
+              final daftarFavorit = favorit.toList();
 
               if (daftarFavorit.isEmpty) {
                 return Card(
@@ -261,7 +311,7 @@ class WargaPage extends StatelessWidget {
                         width: 50,
                         height: 50,
                         decoration: BoxDecoration(
-                          color: Colors.amber.shade50,
+                          color: Colors.amber.withOpacity(0.12),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(Icons.star, color: Colors.amber),
@@ -279,7 +329,15 @@ class WargaPage extends StatelessWidget {
                         ),
                       ),
 
-                      trailing: const Icon(Icons.favorite, color: Colors.red),
+                      trailing: IconButton(
+                        tooltip: 'Hapus dari favorit',
+                        icon: const Icon(Icons.star, color: Colors.amber),
+                        onPressed: () {
+                          context
+                              .read<FavoritCubit>()
+                              .batalTandai(namaLayanan);
+                        },
+                      ),
                     ),
                   );
                 }).toList(),

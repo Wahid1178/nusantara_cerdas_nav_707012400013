@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/pengajuan_cubit.dart';
+import '../models/pengajuan_model.dart';
 import '../pages/beranda_page.dart';
 import '../pages/layanan_page.dart';
 import '../pages/warga_page.dart';
 import 'app_routes.dart';
-import '../models/pengajuan_model.dart';
 
 class KerangkaNavigasi extends StatefulWidget {
   const KerangkaNavigasi({super.key});
@@ -35,9 +35,6 @@ class _KerangkaNavigasiState extends State<KerangkaNavigasi> {
     // Breakpoint tugas: 600 logical pixels
     final bool layarLebar = lebarLayar >= 600;
 
-return BlocSelector<PengajuanCubit, dynamic, int>(
-  selector: (daftarPengajuan) => daftarPengajuan.length,
-  builder: (context, totalPengajuan) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -46,10 +43,8 @@ return BlocSelector<PengajuanCubit, dynamic, int>(
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
       ),
-    
+
       // =========================
       // NAVIGATION DRAWER
       // =========================
@@ -77,8 +72,6 @@ return BlocSelector<PengajuanCubit, dynamic, int>(
           } else if (index == 8) {
             _tampilkanDialogKeluar(context);
           }
-
-
         },
         children: [
           const Padding(
@@ -105,8 +98,8 @@ return BlocSelector<PengajuanCubit, dynamic, int>(
           ),
 
           NavigationDrawerDestination(
-            icon: _ikonWarga(Icons.person_outline, totalPengajuan),
-            selectedIcon: _ikonWarga(Icons.person, totalPengajuan),
+            icon: const _IkonWarga(Icons.person_outline),
+            selectedIcon: const _IkonWarga(Icons.person),
             label: const Text('Warga'),
           ),
        
@@ -176,8 +169,8 @@ return BlocSelector<PengajuanCubit, dynamic, int>(
                   label: Text('Layanan'),
                 ),
                 NavigationRailDestination(
-                  icon: _ikonWarga(Icons.person_outline, totalPengajuan),
-                  selectedIcon: _ikonWarga(Icons.person, totalPengajuan),
+                  icon: const _IkonWarga(Icons.person_outline),
+                  selectedIcon: const _IkonWarga(Icons.person),
                   label: const Text('Warga'),
                 ),
               ],
@@ -210,28 +203,12 @@ return BlocSelector<PengajuanCubit, dynamic, int>(
                   label: 'Layanan',
                 ),
                 NavigationDestination(
-                  icon: _ikonWarga(Icons.person_outline, totalPengajuan),
-                  selectedIcon: _ikonWarga(Icons.person, totalPengajuan),
+                  icon: const _IkonWarga(Icons.person_outline),
+                  selectedIcon: const _IkonWarga(Icons.person),
                   label: 'Warga',
                 ),
               ],
-          ),
-      );
-    },
-  );
-  }
-
-  // =========================
-  // IKON WARGA + BADGE
-  // =========================
-  Widget _ikonWarga(
-    IconData icon,
-    int totalPengajuan,
-  ) {
-    return Badge(
-      isLabelVisible: totalPengajuan > 0,
-      label: Text('$totalPengajuan'),
-      child: Icon(icon),
+            ),
     );
   }
 
@@ -261,6 +238,31 @@ return BlocSelector<PengajuanCubit, dynamic, int>(
               child: const Text('Keluar'),
             ),
           ],
+        );
+      },
+    );
+  }
+}
+
+// =========================
+// IKON WARGA + BADGE
+// =========================
+// Hanya widget ini yang dibangun ulang ketika totalPengajuan berubah.
+// NavigationBar, NavigationRail, dan NavigationDrawer tidak ikut dibangun.
+class _IkonWarga extends StatelessWidget {
+  final IconData icon;
+
+  const _IkonWarga(this.icon);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocSelector<PengajuanCubit, List<Pengajuan>, int>(
+      selector: (daftarPengajuan) => daftarPengajuan.length,
+      builder: (context, totalPengajuan) {
+        return Badge(
+          isLabelVisible: totalPengajuan > 0,
+          label: Text('$totalPengajuan'),
+          child: Icon(icon),
         );
       },
     );

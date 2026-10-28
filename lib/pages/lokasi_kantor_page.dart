@@ -63,8 +63,6 @@ class _LokasiKantorPageState extends State<LokasiKantorPage> {
           'Lokasi Kantor',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
       ),
       body: Column(
         children: [
@@ -86,7 +84,7 @@ class _LokasiKantorPageState extends State<LokasiKantorPage> {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(16),
-            color: Colors.blue.shade50,
+            color: Colors.blue.withOpacity(0.12),
             child: const Text(
               'Daftar Kantor Pelayanan',
               style: TextStyle(

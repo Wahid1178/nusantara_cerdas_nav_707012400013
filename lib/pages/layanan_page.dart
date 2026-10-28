@@ -159,7 +159,7 @@ class LayananPage extends StatelessWidget {
               width: 50,
               height: 50,
               decoration: BoxDecoration(
-                color: Colors.blue.shade50,
+                color: Colors.blue.withOpacity(0.12),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(
@@ -178,10 +178,10 @@ class LayananPage extends StatelessWidget {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                BlocBuilder<FavoritCubit, Set<String>>(
-                  builder: (context, daftarFavorit) {
-                    final isFavorit = daftarFavorit.contains(namaLayanan);
-
+                BlocSelector<FavoritCubit, Set<String>, bool>(
+                  selector: (daftarFavorit) =>
+                      daftarFavorit.contains(namaLayanan),
+                  builder: (context, isFavorit) {
                     return IconButton(
                       tooltip: isFavorit
                           ? 'Hapus dari favorit'
@@ -191,7 +191,13 @@ class LayananPage extends StatelessWidget {
                         color: isFavorit ? Colors.amber : Colors.grey,
                       ),
                       onPressed: () {
-                        context.read<FavoritCubit>().toggleFavorit(namaLayanan);
+                        final favoritCubit = context.read<FavoritCubit>();
+
+                        if (isFavorit) {
+                          favoritCubit.batalTandai(namaLayanan);
+                        } else {
+                          favoritCubit.tandai(namaLayanan);
+                        }
                       },
                     );
                   },
